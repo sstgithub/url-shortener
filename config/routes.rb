@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  root 'urls#dashboard'
+  # root 'urls#dashboard'
 
-  get '/:long_url', to: 'urls#redirect_to_long_url'
+  resources :urls, except: [:index, :edit, :update, :destroy]
+  root 'urls#new'
+  get '/:short_url', to: 'urls#redirect_to_long_url'
 end

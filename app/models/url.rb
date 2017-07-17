@@ -2,7 +2,8 @@ require 'uri'
 
 class Url < ApplicationRecord
   validate :url_is_correctly_formatted
-  before_save :generate_short_url
+  before_save :generate_short_url,
+    if: Proc.new {|url| url.short_url.nil?}
 
   def url_is_correctly_formatted
     uri = URI.parse(long_url)

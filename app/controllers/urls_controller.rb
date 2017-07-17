@@ -22,6 +22,7 @@ class UrlsController < ApplicationController
       redirect_to @url.long_url
     else
       flash[:error]
+      redirect_to root_path
     end
   end
 

@@ -35,5 +35,13 @@ RSpec.describe Url, type: :model do
       url = Url.new(long_url: 'https://gist.github.com/sstgithub/331d74b81493570001a3a849511a2b97')
       url.generate_short_url
     end
+
+    it 'does not generate short url if short url passed in as parameter' do
+      url = Url.new(long_url: 'https://gist.github.com/sstgithub/331d74b81493570001a3a849511a2b97', short_url: 'abc123')
+
+      expect(SecureRandom).not_to receive(:hex)
+
+      url.generate_short_url
+    end
   end
 end

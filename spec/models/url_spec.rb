@@ -18,11 +18,21 @@ RSpec.describe Url, type: :model do
   end
 
   describe 'generate short url' do
-    it 'generates short url and adds to self' do
+    it 'generates short url before save' do
       url = Url.new(long_url: 'https://gist.github.com/sstgithub/331d74b81493570001a3a849511a2b97')
-      url.generate_short_url
+      expect(SecureRandom).to receive(:hex).and_return('321cba')
+      url.save
 
-      expect(url.short_url).not_to be_nil
+      expect(url.short_url).to eq('321cba')
+    end
+
+    it 'does not generate new short url before save if a short url is passed in as parameter' do
+      url = Url.new(long_url: 'https://gist.github.com/sstgithub/331d74b81493570001a3a849511a2b97', short_url: 'abc123')
+      expect(SecureRandom).not_to receive(:hex)
+
+      url.save
+
+      expect(url.short_url).to eq('abc123')
     end
 
     it 'generates another short url if generated short url already exists in db' do
@@ -33,14 +43,6 @@ RSpec.describe Url, type: :model do
       expect(Url).to receive(:find_by_short_url).with('321cba').and_return(nil)
 
       url = Url.new(long_url: 'https://gist.github.com/sstgithub/331d74b81493570001a3a849511a2b97')
-      url.generate_short_url
-    end
-
-    it 'does not generate short url if short url passed in as parameter' do
-      url = Url.new(long_url: 'https://gist.github.com/sstgithub/331d74b81493570001a3a849511a2b97', short_url: 'abc123')
-
-      expect(SecureRandom).not_to receive(:hex)
-
       url.generate_short_url
     end
   end

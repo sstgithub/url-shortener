@@ -21,8 +21,7 @@ class UrlsController < ApplicationController
     if @url
       redirect_to @url.long_url
     else
-      flash[:error]
-      redirect_to root_path
+      redirect_to root_path, alert: 'Invalid short url!'
     end
   end
 
